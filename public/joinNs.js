@@ -14,8 +14,19 @@ const buildHTML = (msg) => {
     return newMessage;
 };
 
+const formSubmission = (event) => {
+    event.preventDefault();
+    const newMessage = document.querySelector('#user-message').value;
+    nsSocket.emit('newMessageToServer', { text: newMessage });
+    document.querySelector('#user-message').value = '';
+}
+
 const joinNs = (endpoint) => {
-    const nsSocket = io(`http://localhost:3001${endpoint}`);
+    if (nsSocket) {
+        nsSocket.close();
+        document.querySelector('#user-input').removeEventListener('submit', formSubmission);
+    }
+    nsSocket = io(`http://localhost:3001${endpoint}`);
     nsSocket.on('nsRoomLoad', (nsRooms) => {
         let roomList = document.querySelector('.room-list');
         roomList.innerHTML = '';
@@ -28,14 +39,14 @@ const joinNs = (endpoint) => {
         let roomNodes = document.querySelectorAll('.room');
         roomNodes.forEach((element) => {
             element.addEventListener('click', (event) => {
-                console.log('Someone clicked on', event.target.innerText);
+                joinRoom(event.target.innerText);
             });
         });
 
         // Add room automatically... first time here
         const topRoom = document.querySelector('.room');
         const topRoomName = topRoom.innerText;
-        joinRoom(topRoomName, nsSocket);
+        joinRoom(topRoomName);
     });
 
     nsSocket.on('messageToClients', (msg) => {
@@ -45,10 +56,5 @@ const joinNs = (endpoint) => {
         messagesUI.scrollTo(0, messagesUI.scrollHeight);
     });
 
-    document.querySelector('.message-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-        const newMessage = document.querySelector('#user-message').value;
-        nsSocket.emit('newMessageToServer', { text: newMessage });
-        document.querySelector('#user-message').value = '';
-    });
+    document.querySelector('.message-form').addEventListener('submit', formSubmission);
 };

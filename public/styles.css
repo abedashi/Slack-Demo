@@ -94,7 +94,7 @@ input {
   margin: 0;
   padding: 0;
   color: #3b4048;
-  max-height: 85%;
+  max-height: 82vh;
   overflow: scroll;
 }
 #messages li .user-image {

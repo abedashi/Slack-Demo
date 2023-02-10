@@ -1,5 +1,5 @@
 const username = prompt('What is your username?');
-const socket = io('https://slack-abedashie.onrender.com', {
+const socket = io('http://localhost:3001', {
     query: {
         username
     }

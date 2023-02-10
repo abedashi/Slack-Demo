@@ -26,7 +26,7 @@ const joinNs = (endpoint) => {
         nsSocket.close();
         document.querySelector('#user-input').removeEventListener('submit', formSubmission);
     }
-    nsSocket = io(`http://localhost:3001${endpoint}`);
+    nsSocket = io(`https://slack-abedashie.onrender.com${endpoint}`);
     nsSocket.on('nsRoomLoad', (nsRooms) => {
         let roomList = document.querySelector('.room-list');
         roomList.innerHTML = '';
